@@ -1,9 +1,9 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  time: 2024-11-19 15:35:43
+  time: 2024-11-19 15:35:00
   value: 9.99
 
 two:
-  time: 2024-11-19 15:35:43
-  value: 9.99
+  time: 2024-11-19 16:00:00
+  value: 100.99
