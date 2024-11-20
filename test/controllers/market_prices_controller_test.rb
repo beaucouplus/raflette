@@ -1,12 +1,9 @@
 require 'test_helper'
 
 class MarketPricesControllerTest < ActionDispatch::IntegrationTest
-  setup do
-    @date = Date.parse("2024-11-19")
-  end
 
   test "index renders market prices for a specific date as JSON, ordered by time ASC" do
-    get market_prices_url, params: { date: @date }
+    get market_prices_url, params: { date: "2024-11-19" }
     assert_response :success
 
     json_response = JSON.parse(response.body)
@@ -15,7 +12,7 @@ class MarketPricesControllerTest < ActionDispatch::IntegrationTest
     assert_equal market_prices(:two).time, json_response.last["time"]
   end
 
-  test "handles no date parameter provided" do
+  test "triggers bad request when no date parameter provided" do
     get market_prices_url
 
     assert_response :bad_request
@@ -23,7 +20,7 @@ class MarketPricesControllerTest < ActionDispatch::IntegrationTest
     assert_equal 'Date parameter is required', json_response['error']
   end
 
-  test "handles present or future date parameter" do
+  test "triggers bad request when present or future date parameter provided" do
     get market_prices_url, params: { date: Date.today.to_s }
 
     assert_response :bad_request
@@ -37,7 +34,7 @@ class MarketPricesControllerTest < ActionDispatch::IntegrationTest
     assert_equal 'Date must be in the past', json_response['error']
   end
 
-  test "handles empty date parameter" do
+  test "triggers bad request when empty date parameter provided" do
     get market_prices_url, params: { date: '' }
 
     assert_response :bad_request
@@ -45,7 +42,7 @@ class MarketPricesControllerTest < ActionDispatch::IntegrationTest
     assert_equal 'Date parameter is required', json_response['error']
   end
 
-  test "handles malformed date parameter" do
+  test "triggers bad request when malformed date parameter" do
     get market_prices_url, params: { date: 'invalid-date' }
 
     assert_response :bad_request
