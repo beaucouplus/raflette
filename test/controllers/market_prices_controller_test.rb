@@ -23,6 +23,20 @@ class MarketPricesControllerTest < ActionDispatch::IntegrationTest
     assert_equal 'Date parameter is required', json_response['error']
   end
 
+  test "handles present or future date parameter" do
+    get market_prices_url, params: { date: Date.today.to_s }
+
+    assert_response :bad_request
+    json_response = JSON.parse(response.body)
+    assert_equal 'Date must be in the past', json_response['error']
+
+    get market_prices_url, params: { date: Date.tomorrow.to_s }
+
+    assert_response :bad_request
+    json_response = JSON.parse(response.body)
+    assert_equal 'Date must be in the past', json_response['error']
+  end
+
   test "handles empty date parameter" do
     get market_prices_url, params: { date: '' }
 

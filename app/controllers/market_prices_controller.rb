@@ -11,8 +11,13 @@ class MarketPricesController < ApplicationController
   def set_and_validate_date
     begin
       @date = params[:date]&.to_date
+
       if @date.blank?
         render json: { error: 'Date parameter is required' }, status: :bad_request
+      end
+
+      if @date&.today? || @date&.future?
+        render json: { error: 'Date must be in the past' }, status: :bad_request
       end
     rescue ArgumentError
       render json: { error: 'Invalid date format' }, status: :bad_request
