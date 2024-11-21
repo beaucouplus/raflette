@@ -18,7 +18,7 @@ class MarketPriceTest < ActiveSupport::TestCase
     assert_includes results, market_price_lower_boundary
     assert_includes results, market_price_inside_boundary
     assert_includes results, market_price_upper_boundary
-    refute_includes results, market_price_outside_boundary
+    assert_not_includes results, market_price_outside_boundary
   end
 
   test "by_date scope returns empty collection for date with no prices" do
@@ -31,11 +31,11 @@ class MarketPriceTest < ActiveSupport::TestCase
     assert first_price.persisted?
 
     duplicate_price = MarketPrice.new(time: time, value: @default_value)
-    refute duplicate_price.valid?
+    assert_not duplicate_price.valid?
   end
 
   test "value must be present" do
     market_price = MarketPrice.new(value: nil)
-    refute market_price.valid?
+    assert_not market_price.valid?
   end
 end
